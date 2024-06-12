@@ -1,24 +1,25 @@
-name: Testes ci
+name: EBAC CI
 
 on:
   push:
     branches: 
-    - main
-
-  # executar o job manualmente
+      - ci
   workflow_dispatch:
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14.x
-    - run: npm install
-    - run: npm test
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies and run tests
+        run: |
+          npm install
+          npm test
+
