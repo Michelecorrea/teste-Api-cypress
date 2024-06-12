@@ -1,30 +1,30 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: EBAC CI 
+name: run_tests
+
 on:
-    push:
-        branches: [ci]
-  
-jobs:
-    build:
-        runs-on: ubuntu-latest
+  # executa esse workflow sempre que subir uma alteracao para a branch master
+  push:
+    branches: [ master ]
 
-           strategy:
-       matrix:
-        node-version: [14.x]
-        
-        steps:
-            - run: actions/checkout@v2
-                   -name:Use node.js${{matrix.node-version }}
-                    - run:actions/setup-node@v2
-              with:
-                node-version: ${{matrix.node-version }}
-            - name: Install Dependencies
-              -run: npm install
-              run: npm run build --if-present
-            - name: npm test
-            
- 
+jobs:
+  build:
+    # maquina onde o workflow será executado
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # vai executar 2x o mesmo workflow (paralelo) para cada node-version        
+        node-version: [12.x, 14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm test
 
 
